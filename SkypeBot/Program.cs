@@ -68,19 +68,16 @@ namespace SkypeBot
                             //string message = "test";
                             //skype.SendMessage(handle, message);
 
-
-                            if (msg.Seen == false)
+                            
+                            if (msg.Seen == false)      //The property or indexer 'IChatMessage.Seen' cannot be used in this context because it lacks the get accessor. In other words i have no idea how to get set or whatever bullshit that is.
                             {
                                 msg.Seen = true;
                                 Console.WriteLine(msg.Body);                              
                                 Console.ReadKey();
                             }
                             
-                        }
-
-                        
-                        break;
-                        
+                        }                        
+                        break;                     
                 }
 
             }
