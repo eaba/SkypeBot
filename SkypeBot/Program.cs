@@ -26,9 +26,9 @@ namespace SkypeBot
 
             //Chat chat = skype.ActiveChats[1];
 
-            //chat.SendMessage("test3");
+            //chat.SendMessage("Auto reply " + i);
 
-            
+
 
             List<string> allcontacts = new List<string>();
             foreach (User user in skype.Friends)
@@ -41,9 +41,6 @@ namespace SkypeBot
 
             Console.ReadKey();
 
-            
-
-
             Console.WriteLine("watdo?\n1. Send Message\n2. Receive Message");
             int choice;
             if (int.TryParse(Console.ReadLine(), out choice))
@@ -51,6 +48,7 @@ namespace SkypeBot
                 switch (choice)
                 {
                     case 1:
+
                         Console.WriteLine("You have selected \"Send Message\"\n");
 
                         Console.WriteLine("Please enter a contact: ");
@@ -59,20 +57,24 @@ namespace SkypeBot
                         string messagetosend = Console.ReadLine();
                         skype.SendMessage(contacttosend, messagetosend);
                         break;
-                    case 2:
-                        Console.WriteLine("You have selected \"Receive Message\"\n");
 
+                    case 2:
+
+                        Console.WriteLine("You have selected \"Receive Message\"\n");
+                        int i = 1;
                         foreach (IChatMessage msg in skype.MissedMessages)
                         {
                             //string handle = msg.Sender.Handle;
-                            //string message = "This is an auto response message.";
+                            //string message = "test";
                             //skype.SendMessage(handle, message);
+                            
                             
 
                             Console.WriteLine(msg.Body);
                             msg.Seen = true;
                             Console.ReadKey();
-
+                            
+                            
                         }
 
                         
