@@ -67,13 +67,14 @@ namespace SkypeBot
                             //string handle = msg.Sender.Handle;
                             //string message = "test";
                             //skype.SendMessage(handle, message);
-                            
-                            
 
-                            Console.WriteLine(msg.Body);
-                            msg.Seen = true;
-                            Console.ReadKey();
-                            
+
+                            if (msg.Seen == false)
+                            {
+                                msg.Seen = true;
+                                Console.WriteLine(msg.Body);                              
+                                Console.ReadKey();
+                            }
                             
                         }
 
