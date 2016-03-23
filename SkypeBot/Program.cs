@@ -70,15 +70,25 @@ namespace SkypeBot
                                 //string message = "test";
                                 //skype.SendMessage(handle, message);
 
-                                Console.WriteLine("Message received from" + msg.Sender.Handle);
+
+                                
+                                
+                                Console.WriteLine("Message received from " + msg.Sender.Handle);
                                 msg.Seen = true;
                                 Console.WriteLine(msg.Body);
                                 string reply = "bot> " + bot1session.Think(msg.Body);
                                 Console.WriteLine(reply);
                                 skype.SendMessage(msg.Sender.Handle, reply);
+                                Console.WriteLine(msg.ChatName);
                                 //Console.ReadKey();
+                                
 
+                            }
 
+                            
+                            foreach (IChat chat in skype.Chats)
+                            {
+                                Console.WriteLine("\n\n" + chat.FriendlyName + "\n\n");
                             }
                         }
                         break;
