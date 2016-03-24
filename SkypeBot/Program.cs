@@ -31,86 +31,113 @@ namespace SkypeBot
 
 
             List<string> allcontacts = new List<string>();
-            foreach (User user in skype.Friends)
+            List<string> blacklist = new List<string>();
+
+
+
+
+
+
+           
+            while (true)
             {
-                allcontacts.Add(user.Handle);
-            }
-
-            allcontacts.ForEach(i => Console.WriteLine("{0}", i));
-            Console.WriteLine("\n");
-
-
-
-            Console.WriteLine("watdo?\n1. Send Message\n2. Clever Responses\n3. Change Mood");
-            int choice;
-            if (int.TryParse(Console.ReadLine(), out choice))
-            {
-                switch (choice)
+                Console.Clear();
+                Console.WriteLine("watdo?\n1. Send Message\n2. Clever Responses\n3. Change Mood\n4. Add user to blacklist\n5. Remove user from blacklist\n6. List Contacts");
+                int choice;
+                if (int.TryParse(Console.ReadLine(), out choice))
                 {
-                    case 1:
+                    switch (choice)
+                    {
+                        case 1:
 
-                        Console.WriteLine("You have selected \"Send Message\"\n");
+                            Console.WriteLine("You have selected \"Send Message\"\n");
 
-                        Console.WriteLine("Please enter a contact: ");
-                        string contacttosend = Console.ReadLine();
-                        Console.WriteLine("Please enter message: ");
-                        string messagetosend = Console.ReadLine();
-                        skype.SendMessage(contacttosend, messagetosend);
-                        break;
+                            Console.WriteLine("Please enter a contact: ");
+                            string contacttosend = Console.ReadLine();
+                            Console.WriteLine("Please enter message: ");
+                            string messagetosend = Console.ReadLine();
+                            skype.SendMessage(contacttosend, messagetosend);
+                            break;
 
-                    case 2:
+                        case 2:
 
-                        Console.WriteLine("You have selected \"Cleverbot Replies\"\n");
+                            Console.WriteLine("You have selected \"Cleverbot Replies\"\n");
 
-                        while (true)
-                        {
-                            foreach (IChatMessage msg in skype.MissedMessages)
+                            while (true)
                             {
-                                //string handle = msg.Sender.Handle;
-                                //string message = "test";
-                                //skype.SendMessage(handle, message);
+                                foreach (IChatMessage msg in skype.MissedMessages)
+                                {
+                                    //string handle = msg.Sender.Handle;
+                                    //string message = "test";
+                                    //skype.SendMessage(handle, message);
 
-
-                                
-                                
-                                Console.WriteLine("Message received from " + msg.Sender.Handle);
-                                msg.Seen = true;
-                                Console.WriteLine(msg.Body);
-                                string reply = "bot> " + bot1session.Think(msg.Body);
-                                Console.WriteLine(reply);
-                                skype.SendMessage(msg.Sender.Handle, reply);
-                                Console.WriteLine(msg.ChatName);
-                                //Console.ReadKey();
-                                
-
+                                    if (!blacklist.Contains(msg.Sender.Handle))
+                                    {
+                                        try
+                                        {
+                                            Console.WriteLine("Message received from [" + msg.Sender.Handle + "]\n");
+                                            msg.Seen = true;
+                                            Console.WriteLine("Message: [" + msg.Body + "]\n");
+                                            string reply = "bot> " + bot1session.Think(msg.Body);
+                                            Console.WriteLine("Reply: [" + reply + "]\n");
+                                            skype.SendMessage(msg.Sender.Handle, reply);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            //usually a timeout
+                                            Console.WriteLine("Timed out\n" + e);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("\nUser is on blacklist. ABORT!!1\n");
+                                        msg.Seen = true;
+                                    }
+                                }
                             }
+                            break;
 
-                            
-                            foreach (IChat chat in skype.Chats)
+                        case 3:
+                            Console.WriteLine("You have selected \"Change Mood\"\nPlease enter new status:");
+                            string status = Console.ReadLine();
+                            skype.CurrentUserProfile.MoodText = status;
+
+
+
+                            break;
+
+                        case 4:
+                            Console.WriteLine("You have selected \"Add user to blacklist\".\nPlease enter username:");
+                            string usertoadd = Console.ReadLine();
+                            blacklist.Add(usertoadd);
+
+                            break;
+                        case 5:
+                            Console.WriteLine("You have selected \"Remove user from blacklist\".\nPlease enter username:");
+                            string usertoremove = Console.ReadLine();
+                            blacklist.Remove(usertoremove);
+
+                            break;
+                        case 6:
+                            foreach (User user in skype.Friends)
                             {
-                                Console.WriteLine("\n\n" + chat.FriendlyName + "\n\n");
+                                allcontacts.Add(user.Handle);
                             }
-                        }
-                        break;
+                            Console.WriteLine("\n");
+                            allcontacts.ForEach(i => Console.WriteLine("{0}", i));
+                            Console.WriteLine("\n");
 
-                    case 3:
-                        Console.WriteLine("You have selected \"Change Mood\"\nPlease enter new status:");
-                        string status = Console.ReadLine();
-                        skype.CurrentUserProfile.MoodText = status;
-
+                            break;
+                    }
 
 
-                        break;
+
+
+
+                    Console.WriteLine("Press Any Key to Continue...");
+                    Console.ReadKey();
                 }
-
-
-
-
-
-
-                Console.ReadKey();
             }
-
         }
 
     }
