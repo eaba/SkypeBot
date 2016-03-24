@@ -32,8 +32,18 @@ namespace SkypeBot
 
 
             List<string> allcontacts = new List<string>();
-            List<string> blacklist = File.ReadLines("blacklist.txt").ToList();
-
+            List<string> blacklist;
+            try
+            {
+                blacklist = File.ReadLines("blacklist.txt").ToList();
+                Console.WriteLine("Blacklist loaded");
+            }
+            catch
+            {
+                Console.WriteLine("Blacklist failed to load!\nCreating new one");
+                using (StreamWriter sw = File.CreateText("blacklist.txt"));
+                blacklist = File.ReadLines("blacklist.txt").ToList();
+            }
             while (true)
             {
                 Console.Clear();
@@ -88,6 +98,8 @@ namespace SkypeBot
                                         Console.WriteLine("\nUser is on blacklist. ABORT!!1\n");     //ext0
                                         msg.Seen = true;
                                     }
+
+                                    //TODO: somehow add something to break from this loop
                                 }
                             }
                             break;
