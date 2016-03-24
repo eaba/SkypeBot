@@ -32,12 +32,12 @@ namespace SkypeBot
 
 
             List<string> allcontacts = new List<string>();
-            List<string> blacklist = new List<string>();
+            List<string> blacklist = File.ReadLines("blacklist.txt").ToList();
 
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("watdo?\n1. Send Message\n2. Clever Responses\n3. Change Mood\n4. Add user to blacklist\n5. Remove user from blacklist\n6. List Contacts");
+                Console.WriteLine("watdo?\n1. Send Message\n2. Clever Responses\n3. Change Mood\n4. Add user to blacklist\n5. Remove user from blacklist\n6. Show blacklist\n7. List Contacts\n");
                 int choice;
                 if (int.TryParse(Console.ReadLine(), out choice))
                 {
@@ -115,18 +115,34 @@ namespace SkypeBot
                             else
                             {
                                 Console.WriteLine("User is already blacklisted");
-
                             }
 
                             break;
                         case 5:
                             Console.WriteLine("You have selected \"Remove user from blacklist\".\nPlease enter username:");
                             string usertoremove = Console.ReadLine();
-                            blacklist.Remove(usertoremove);
 
+
+                            containsuser = File.ReadLines("blacklist.txt").Contains(usertoremove);
+                            if (containsuser == true)
+                            {
+                                blacklist.Remove(usertoremove);
+                                File.WriteAllLines(("blacklist.txt"), blacklist.ToList());
+                                Console.WriteLine("User added to blacklist");
+                            }
+                            else
+                            {
+                                Console.WriteLine("User is not on blacklist");
+                            }
                             break;
                         case 6:
-                            foreach (User user in skype.Friends) 
+                            Console.WriteLine("\n");
+                            blacklist.ForEach(i => Console.WriteLine("{0}", i));
+                            Console.WriteLine("\n");
+
+                            break;
+                        case 7:
+                            foreach (User user in skype.Friends)
                             {
                                 allcontacts.Add(user.Handle);
                             }
