@@ -70,6 +70,7 @@ namespace SkypeBot
                                     //string handle = msg.Sender.Handle;
                                     //string message = "test";
                                     //skype.SendMessage(handle, message);
+
                                     if (!blacklist.Contains(msg.Sender.Handle))
                                     {
                                         try
@@ -100,9 +101,6 @@ namespace SkypeBot
                             Console.WriteLine("You have selected \"Change Mood\"\nPlease enter new status:");
                             string status = Console.ReadLine();
                             skype.CurrentUserProfile.MoodText = status;
-
-
-
                             break;
 
                         case 4:
