@@ -50,9 +50,7 @@ namespace SkypeBot
                     {
                         case 1:
                             //send message
-                            Console.WriteLine("You have selected \"Send Message\"\n");
-
-                            Console.WriteLine("Please enter a contact: ");
+                            Console.WriteLine("You have selected \"Send Message\"\nPlease enter a contact: ");
                             string contacttosend = Console.ReadLine();
                             Console.WriteLine("Please enter message: ");
                             string messagetosend = Console.ReadLine();
@@ -117,7 +115,6 @@ namespace SkypeBot
                             if (!containsuser == true)
                             {
                                 TextWriter tw = new StreamWriter("blacklist.txt");
-
                                 blacklist.ForEach(tw.WriteLine);
                                 tw.Close();
                             }
@@ -127,6 +124,7 @@ namespace SkypeBot
                             }
 
                             break;
+
                         case 5:
                             //remove user from blacklist
                             Console.WriteLine("You have selected \"Remove user from blacklist\".\nPlease enter username:");
@@ -138,20 +136,21 @@ namespace SkypeBot
                             {
                                 blacklist.Remove(usertoremove);
                                 File.WriteAllLines(("blacklist.txt"), blacklist.ToList());
-                                Console.WriteLine("User added to blacklist");
+                                Console.WriteLine("User removed from blacklist");
                             }
                             else
                             {
                                 Console.WriteLine("User is not on blacklist");
                             }
                             break;
+
                         case 6:
                             //display blacklist to user
                             Console.WriteLine("\n");
                             blacklist.ForEach(i => Console.WriteLine("{0}", i));
                             Console.WriteLine("\n");
-
                             break;
+
                         case 7:
                             //display all contacts to user
                             foreach (User user in skype.Friends)
@@ -161,14 +160,8 @@ namespace SkypeBot
                             Console.WriteLine("\n");
                             allcontacts.ForEach(i => Console.WriteLine("{0}", i));
                             Console.WriteLine("\n");
-
                             break;
                     }
-
-
-
-
-
                     Console.WriteLine("Press Any Key to Continue...");
                     Console.ReadKey();
                 }
