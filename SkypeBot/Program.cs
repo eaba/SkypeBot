@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using SKYPE4COMLib;
 using ChatterBotAPI;
 
@@ -33,12 +34,6 @@ namespace SkypeBot
             List<string> allcontacts = new List<string>();
             List<string> blacklist = new List<string>();
 
-
-
-
-
-
-           
             while (true)
             {
                 Console.Clear();
@@ -85,12 +80,12 @@ namespace SkypeBot
                                         catch (Exception e)
                                         {
                                             //usually a timeout
-                                            Console.WriteLine("Timed out\n" + e);
+                                            Console.WriteLine("Timed out..\n" + e);
                                         }
                                     }
                                     else
                                     {
-                                        Console.WriteLine("\nUser is on blacklist. ABORT!!1\n");
+                                        Console.WriteLine("\nUser is on blacklist. ABORT!!1\n");     //ext0
                                         msg.Seen = true;
                                     }
                                 }
@@ -108,6 +103,21 @@ namespace SkypeBot
                             string usertoadd = Console.ReadLine();
                             blacklist.Add(usertoadd);
 
+                            bool containsuser = File.ReadLines("blacklist.txt").Contains(usertoadd);
+
+                            if (!containsuser == true)
+                            {
+                                TextWriter tw = new StreamWriter("blacklist.txt");
+
+                                blacklist.ForEach(tw.WriteLine);
+                                tw.Close();
+                            }
+                            else
+                            {
+                                Console.WriteLine("User is already blacklisted");
+
+                            }
+
                             break;
                         case 5:
                             Console.WriteLine("You have selected \"Remove user from blacklist\".\nPlease enter username:");
@@ -116,7 +126,7 @@ namespace SkypeBot
 
                             break;
                         case 6:
-                            foreach (User user in skype.Friends)
+                            foreach (User user in skype.Friends) 
                             {
                                 allcontacts.Add(user.Handle);
                             }
