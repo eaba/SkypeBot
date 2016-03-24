@@ -23,13 +23,8 @@ namespace SkypeBot
             ChatterBot bot1 = factory.Create(ChatterBotType.CLEVERBOT);
             ChatterBotSession bot1session = bot1.CreateSession();
 
-
-
             //Chat chat = skype.ActiveChats[1];
-
             //chat.SendMessage("Auto reply " + i);
-
-
 
             List<string> allcontacts = new List<string>();
             List<string> blacklist;
