@@ -70,7 +70,6 @@ namespace SkypeBot
                                     //string handle = msg.Sender.Handle;
                                     //string message = "test";
                                     //skype.SendMessage(handle, message);
-
                                     if (!blacklist.Contains(msg.Sender.Handle))
                                     {
                                         try
