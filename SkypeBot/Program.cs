@@ -54,7 +54,7 @@ namespace SkypeBot
                     switch (choice)
                     {
                         case 1:
-
+                            //send message
                             Console.WriteLine("You have selected \"Send Message\"\n");
 
                             Console.WriteLine("Please enter a contact: ");
@@ -65,7 +65,7 @@ namespace SkypeBot
                             break;
 
                         case 2:
-
+                            //respond to unread messages with cleverbot's replies
                             Console.WriteLine("You have selected \"Cleverbot Replies\"\n");
 
                             while (true)
@@ -80,7 +80,7 @@ namespace SkypeBot
                                     {
                                         try
                                         {
-                                            Console.WriteLine("Message received from [" + msg.Sender.Handle + "]\n");
+                                            Console.WriteLine("Message received from [" + msg.Sender.DisplayName + "]\n");
                                             msg.Seen = true;
                                             Console.WriteLine("Message: [" + msg.Body + "]\n");
                                             string reply = "bot> " + bot1session.Think(msg.Body);
@@ -105,12 +105,14 @@ namespace SkypeBot
                             break;
 
                         case 3:
+                            //change skype mood
                             Console.WriteLine("You have selected \"Change Mood\"\nPlease enter new status:");
                             string status = Console.ReadLine();
                             skype.CurrentUserProfile.MoodText = status;
                             break;
 
                         case 4:
+                            //add user to blacklist
                             Console.WriteLine("You have selected \"Add user to blacklist\".\nPlease enter username:");
                             string usertoadd = Console.ReadLine();
                             blacklist.Add(usertoadd);
@@ -131,6 +133,7 @@ namespace SkypeBot
 
                             break;
                         case 5:
+                            //remove user from blacklist
                             Console.WriteLine("You have selected \"Remove user from blacklist\".\nPlease enter username:");
                             string usertoremove = Console.ReadLine();
 
@@ -148,12 +151,14 @@ namespace SkypeBot
                             }
                             break;
                         case 6:
+                            //display blacklist to user
                             Console.WriteLine("\n");
                             blacklist.ForEach(i => Console.WriteLine("{0}", i));
                             Console.WriteLine("\n");
 
                             break;
                         case 7:
+                            //display all contacts to user
                             foreach (User user in skype.Friends)
                             {
                                 allcontacts.Add(user.Handle);
