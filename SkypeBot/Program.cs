@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using SKYPE4COMLib;
@@ -27,17 +28,29 @@ namespace SkypeBot
 
             List<string> allcontacts = new List<string>();
             List<string> blacklist;
+            
+            List<string> activesessions = new List<string>();
+            int c = 0;
+            
+            //check if the blacklist file exists. If it does not, it creates it and loads its contents into a list
             try
             {
-                blacklist = File.ReadLines("blacklist.txt").ToList();
-                Console.WriteLine("Blacklist loaded");
+                blacklist = File.ReadLines("blacklist.txt").ToList();                
             }
             catch
             {
                 Console.WriteLine("Blacklist failed to load!\nCreating new one");
                 using (StreamWriter sw = File.CreateText("blacklist.txt"))
-                blacklist = File.ReadLines("blacklist.txt").ToList();
+                    sw.Close();                
             }
+            finally
+            {
+                blacklist = File.ReadLines("blacklist.txt").ToList();
+                Console.WriteLine("Blacklist loaded");
+                Thread.Sleep(1000);
+            }
+
+
             while (1 < 2)
             {
                 Console.Clear();
@@ -90,9 +103,9 @@ namespace SkypeBot
                                         Console.WriteLine("\nUser is on blacklist. ABORT!!1\n");     //ext0
                                         msg.Seen = true;
                                     }
-
                                 }
                             }
+                            
                             break;
 
                         case 3:
