@@ -19,7 +19,6 @@ namespace SkypeBot
             Skype skype = new Skype();
 
             ChatterBotFactory factory = new ChatterBotFactory();
-
             ChatterBot bot1 = factory.Create(ChatterBotType.CLEVERBOT);
             ChatterBotSession bot1session = bot1.CreateSession();
 
@@ -36,13 +35,13 @@ namespace SkypeBot
             catch
             {
                 Console.WriteLine("Blacklist failed to load!\nCreating new one");
-                using (StreamWriter sw = File.CreateText("blacklist.txt"));
+                using (StreamWriter sw = File.CreateText("blacklist.txt"))
                 blacklist = File.ReadLines("blacklist.txt").ToList();
             }
-            while (true)
+            while (1 < 2)
             {
                 Console.Clear();
-                Console.WriteLine("watdo?\n1. Send Message\n2. Clever Responses\n3. Change Mood\n4. Add user to blacklist\n5. Remove user from blacklist\n6. Show blacklist\n7. List Contacts\n");
+                Console.WriteLine("watdo?\n1. Send Message\n2. Clever Responses\n3. Change Mood\n4. Add user to blacklist\n5. Remove user from blacklist\n6. Show blacklist\n7. List Contacts\n\n99. Exit");
                 int choice;
                 if (int.TryParse(Console.ReadLine(), out choice))
                 {
@@ -59,9 +58,9 @@ namespace SkypeBot
 
                         case 2:
                             //respond to unread messages with cleverbot's replies
-                            Console.WriteLine("You have selected \"Cleverbot Replies\"\n");
+                            Console.WriteLine("You have selected \"Cleverbot Replies\"\n\nPress any key to stop.");
 
-                            while (true)
+                            while (!Console.KeyAvailable) 
                             {
                                 foreach (IChatMessage msg in skype.MissedMessages)
                                 {
@@ -73,7 +72,7 @@ namespace SkypeBot
                                     {
                                         try
                                         {
-                                            Console.WriteLine("Message received from [" + msg.Sender.DisplayName + "]\n");
+                                            Console.WriteLine("Message received from [" + msg.Sender.Handle + "]\n");
                                             msg.Seen = true;
                                             Console.WriteLine("Message: [" + msg.Body + "]\n");
                                             string reply = "bot> " + bot1session.Think(msg.Body);
@@ -92,7 +91,6 @@ namespace SkypeBot
                                         msg.Seen = true;
                                     }
 
-                                    //TODO: somehow add something to break from this loop
                                 }
                             }
                             break;
@@ -117,10 +115,11 @@ namespace SkypeBot
                                 TextWriter tw = new StreamWriter("blacklist.txt");
                                 blacklist.ForEach(tw.WriteLine);
                                 tw.Close();
+                                Console.WriteLine("Added user to blacklist.");
                             }
                             else
                             {
-                                Console.WriteLine("User is already blacklisted");
+                                Console.WriteLine("User is already blacklisted.");
                             }
 
                             break;
@@ -130,17 +129,16 @@ namespace SkypeBot
                             Console.WriteLine("You have selected \"Remove user from blacklist\".\nPlease enter username:");
                             string usertoremove = Console.ReadLine();
 
-
                             containsuser = File.ReadLines("blacklist.txt").Contains(usertoremove);
                             if (containsuser == true)
                             {
                                 blacklist.Remove(usertoremove);
                                 File.WriteAllLines(("blacklist.txt"), blacklist.ToList());
-                                Console.WriteLine("User removed from blacklist");
+                                Console.WriteLine("User removed from blacklist.");
                             }
                             else
                             {
-                                Console.WriteLine("User is not on blacklist");
+                                Console.WriteLine("User is not on blacklist.");
                             }
                             break;
 
@@ -160,6 +158,9 @@ namespace SkypeBot
                             Console.WriteLine("\n");
                             allcontacts.ForEach(i => Console.WriteLine("{0}", i));
                             Console.WriteLine("\n");
+                            break;
+                        case 99:
+                            Environment.Exit(0);
                             break;
                     }
                     Console.WriteLine("Press Any Key to Continue...");
