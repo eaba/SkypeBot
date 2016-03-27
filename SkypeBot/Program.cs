@@ -225,19 +225,21 @@ namespace SkypeBot
                                         }
                                         else
                                         {
-                                            if (command.Remove(10) == "int2binary")        //magic dont touch. seriously.
+                                            try
                                             {
-                                                string inttoconvert = command.Substring(10, command.Length - 10);
-                                                string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
+                                                if (command.Remove(10) == "int2binary")        //magic dont touch. seriously.
+                                                {
+                                                    string inttoconvert = command.Substring(10, command.Length - 10);
+                                                    string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
 
-                                                message = inttoconvert + " in binary is: " + binary;
+                                                    message = inttoconvert + " in binary is: " + binary;
+                                                }
                                             }
-                                            else
-                                            {
-                                                message = "Unknown command.";
-                                            }    
+                                            catch { }
+                                            message = "Unknown command.";
+
                                         }
-                                        
+
 
                                         Console.WriteLine(command);
                                         skype.SendMessage(msg.Sender.Handle, message);
