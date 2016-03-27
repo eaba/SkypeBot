@@ -18,6 +18,7 @@ namespace SkypeBot
             Console.WriteLine("Started!!");
 
             Skype skype = new Skype();
+            skype.Attach(7, false);
 
             ChatterBotFactory factory = new ChatterBotFactory();
             ChatterBot bot1 = factory.Create(ChatterBotType.CLEVERBOT);
@@ -54,7 +55,7 @@ namespace SkypeBot
             while (1 < 2)
             {
                 Console.Clear();
-                Console.WriteLine("watdo?\n1. Send Message\n2. Clever Responses\n3. Change Mood\n4. Add user to blacklist\n5. Remove user from blacklist\n6. Show blacklist\n7. List Contacts\n\n99. Exit");
+                Console.WriteLine("watdo?\n1. Send Message\n2. Clever Responses\n3. Change Mood\n4. Spam status\n5. Add user to blacklist\n6. Remove user from blacklist\n7. Show blacklist\n8. List Contacts\n9. Interpret commands\n\n99. Exit");
                 int choice;
                 if (int.TryParse(Console.ReadLine(), out choice))
                 {
@@ -116,6 +117,25 @@ namespace SkypeBot
                             break;
 
                         case 4:
+                            //spam skype status
+                            Console.WriteLine("You have selected \"Spam Status\"\nPress any key to stop.");
+                            while (!Console.KeyAvailable)
+                            {
+                                //ghetto way
+                                skype.ChangeUserStatus(TUserStatus.cusOnline);
+                                Thread.Sleep(500);
+                                skype.ChangeUserStatus(TUserStatus.cusAway);
+                                Thread.Sleep(500);
+                                skype.ChangeUserStatus(TUserStatus.cusDoNotDisturb);
+                                Thread.Sleep(500);
+                                skype.ChangeUserStatus(TUserStatus.cusInvisible);
+                                Thread.Sleep(500);
+                            }
+
+
+                            break;
+
+                        case 5:
                             //add user to blacklist
                             Console.WriteLine("You have selected \"Add user to blacklist\".\nPlease enter username:");
                             string usertoadd = Console.ReadLine();
@@ -137,7 +157,7 @@ namespace SkypeBot
 
                             break;
 
-                        case 5:
+                        case 6:
                             //remove user from blacklist
                             Console.WriteLine("You have selected \"Remove user from blacklist\".\nPlease enter username:");
                             string usertoremove = Console.ReadLine();
@@ -155,14 +175,14 @@ namespace SkypeBot
                             }
                             break;
 
-                        case 6:
+                        case 7:
                             //display blacklist to user
                             Console.WriteLine("\n");
                             blacklist.ForEach(i => Console.WriteLine("{0}", i));
                             Console.WriteLine("\n");
                             break;
 
-                        case 7:
+                        case 8:
                             //display all contacts to user
                             foreach (User user in skype.Friends)
                             {
@@ -171,6 +191,59 @@ namespace SkypeBot
                             Console.WriteLine("\n");
                             allcontacts.ForEach(i => Console.WriteLine("{0}", i));
                             Console.WriteLine("\n");
+                            break;
+
+                        case 9:
+                            //commands
+                            while (!Console.KeyAvailable)
+                            {
+                                foreach (IChatMessage msg in skype.MissedMessages)
+                                {
+                                    msg.Seen = true;
+                                    string trigger = "!";
+
+                                    if (!blacklist.Contains(msg.Sender.Handle) && msg.Body.IndexOf(trigger) == 0)
+                                    {
+                                        string command = msg.Body.Remove(0, trigger.Length).ToLower();
+                                        string message ;
+
+                                        if (command == "time")
+                                        {
+                                            message = DateTime.Now.ToLongTimeString();
+                                        }
+                                        else if (command == "date")
+                                        {
+                                            message = DateTime.Now.ToLongDateString();
+                                        }
+                                        else if (command == "about")
+                                        {
+                                            message = "made by root 2016 and such and such. Licensed under the DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE";
+                                        }
+                                        else if (command.Length == 10 && command.Remove(10) == "int2binary")        //magic dont touch. seriously.
+                                        {
+                                            string inttoconvert = command.Substring(10, command.Length - 10);
+                                            string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
+
+                                            message = inttoconvert + " in binary is: " + binary;
+                                        }
+                                        else if (command == "help")
+                                        {
+                                            message = "Help: Commands include: !time !date !about !int2binary !help";
+                                        }
+                                        else
+                                        {
+                                            message = "Unknown command.";
+                                        }
+
+                                        Console.WriteLine(command);
+                                        skype.SendMessage(msg.Sender.Handle, message);
+
+
+
+                                        //add: binary/hex/decimal translator
+                                    }
+                                }
+                            }
                             break;
                         case 99:
                             Environment.Exit(0);
