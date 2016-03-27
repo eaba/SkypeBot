@@ -58,7 +58,6 @@ namespace SkypeBot
                 Thread.Sleep(1000);
             }
 
-
             while (1 < 2)
             {
                 Console.Clear();
@@ -244,7 +243,6 @@ namespace SkypeBot
                                                 message = "This should never be seen by user..";    
                                             }
                                         }
-
                                         else                  //magic dont touch. seriously.
                                         {
                                             try           //not the most elegant solution
