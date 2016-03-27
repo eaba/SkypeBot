@@ -14,7 +14,6 @@ namespace SkypeBot
     {
         static void Main(string[] args)
         {
-
             Console.WriteLine("Started!!");
 
             Skype skype = new Skype();
@@ -223,11 +222,11 @@ namespace SkypeBot
                                         {
                                             message = "Help: Commands include: !time !date !about !int2binary !help";
                                         }
-                                        else
+                                        else                  //magic dont touch. seriously.
                                         {
-                                            try
+                                            try           //not the most elegant solution
                                             {
-                                                if (command.Remove(10) == "int2binary")        //magic dont touch. seriously.
+                                                if (command.Remove(10) == "int2binary")        
                                                 {
                                                     string inttoconvert = command.Substring(10, command.Length - 10);
                                                     string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
@@ -236,24 +235,24 @@ namespace SkypeBot
                                                 }
                                                 else
                                                 {
-                                                    message = "Unknown command.";
+                                                    message = "Unknown Command";
+
                                                 }
                                             }
                                             catch (Exception e)
                                             {
-                                                message = "An error has occured: " + e;
+                                                message = "Unknown Command";
+                                                
                                             }
                                             
-
                                         }
 
 
-                                        Console.WriteLine(command);
+                                        Console.WriteLine(msg.Sender.Handle + " >> " + command);
                                         skype.SendMessage(msg.Sender.Handle, message);
 
 
-
-                                        //add: binary/hex/decimal translator
+                                        //add: binary/hex/decimal converter
                                     }
                                 }
                             }
