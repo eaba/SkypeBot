@@ -234,9 +234,16 @@ namespace SkypeBot
 
                                                     message = inttoconvert + " in binary is: " + binary;
                                                 }
+                                                else
+                                                {
+                                                    message = "Unknown command.";
+                                                }
                                             }
-                                            catch { }
-                                            message = "Unknown command.";
+                                            catch (Exception e)
+                                            {
+                                                message = "An error has occured: " + e;
+                                            }
+                                            
 
                                         }
 
