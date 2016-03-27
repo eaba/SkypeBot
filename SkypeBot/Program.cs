@@ -29,20 +29,20 @@ namespace SkypeBot
 
             List<string> allcontacts = new List<string>();
             List<string> blacklist;
-            
+
             List<string> activesessions = new List<string>();
             int c = 0;
-            
+
             //check if the blacklist file exists. If it does not, it creates it and loads its contents into a list
             try
             {
-                blacklist = File.ReadLines("blacklist.txt").ToList();                
+                blacklist = File.ReadLines("blacklist.txt").ToList();
             }
             catch
             {
                 Console.WriteLine("Blacklist failed to load!\nCreating new one");
                 using (StreamWriter sw = File.CreateText("blacklist.txt"))
-                    sw.Close();                
+                    sw.Close();
             }
             finally
             {
@@ -74,7 +74,7 @@ namespace SkypeBot
                             //respond to unread messages with cleverbot's replies
                             Console.WriteLine("You have selected \"Cleverbot Replies\"\n\nPress any key to stop.");
 
-                            while (!Console.KeyAvailable) 
+                            while (!Console.KeyAvailable)
                             {
                                 foreach (IChatMessage msg in skype.MissedMessages)
                                 {
@@ -106,7 +106,7 @@ namespace SkypeBot
                                     }
                                 }
                             }
-                            
+
                             break;
 
                         case 3:
@@ -205,7 +205,7 @@ namespace SkypeBot
                                     if (!blacklist.Contains(msg.Sender.Handle) && msg.Body.IndexOf(trigger) == 0)
                                     {
                                         string command = msg.Body.Remove(0, trigger.Length).ToLower();
-                                        string message ;
+                                        string message;
 
                                         if (command == "time")
                                         {
@@ -219,21 +219,25 @@ namespace SkypeBot
                                         {
                                             message = "made by root 2016 and such and such. Licensed under the DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE";
                                         }
-                                        else if (command.Length == 10 && command.Remove(10) == "int2binary")        //magic dont touch. seriously.
-                                        {
-                                            string inttoconvert = command.Substring(10, command.Length - 10);
-                                            string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
-
-                                            message = inttoconvert + " in binary is: " + binary;
-                                        }
                                         else if (command == "help")
                                         {
                                             message = "Help: Commands include: !time !date !about !int2binary !help";
                                         }
                                         else
                                         {
-                                            message = "Unknown command.";
+                                            if (command.Remove(10) == "int2binary")        //magic dont touch. seriously.
+                                            {
+                                                string inttoconvert = command.Substring(10, command.Length - 10);
+                                                string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
+
+                                                message = inttoconvert + " in binary is: " + binary;
+                                            }
+                                            else
+                                            {
+                                                message = "Unknown command.";
+                                            }    
                                         }
+                                        
 
                                         Console.WriteLine(command);
                                         skype.SendMessage(msg.Sender.Handle, message);
