@@ -15,6 +15,7 @@ namespace SkypeBot
         static void Main(string[] args)
         {
             Console.WriteLine("Started!!");
+            Console.Title = "Skype Toolkit";
 
             Skype skype = new Skype();
             skype.Attach(7, false);
@@ -30,7 +31,14 @@ namespace SkypeBot
             List<string> blacklist;
 
             List<string> activesessions = new List<string>();
-            int c = 0;
+
+            bool containsuser;
+
+            //add all contacts to a list
+            foreach (User user in skype.Friends)
+            {
+                allcontacts.Add(user.Handle);
+            }
 
             //check if the blacklist file exists. If it does not, it creates it and loads its contents into a list
             try
@@ -140,7 +148,7 @@ namespace SkypeBot
                             string usertoadd = Console.ReadLine();
                             blacklist.Add(usertoadd);
 
-                            bool containsuser = File.ReadLines("blacklist.txt").Contains(usertoadd);
+                            containsuser = File.ReadLines("blacklist.txt").Contains(usertoadd);
 
                             if (!containsuser == true)
                             {
@@ -183,10 +191,6 @@ namespace SkypeBot
 
                         case 8:
                             //display all contacts to user
-                            foreach (User user in skype.Friends)
-                            {
-                                allcontacts.Add(user.Handle);
-                            }
                             Console.WriteLine("\n");
                             allcontacts.ForEach(i => Console.WriteLine("{0}", i));
                             Console.WriteLine("\n");
@@ -220,8 +224,27 @@ namespace SkypeBot
                                         }
                                         else if (command == "help")
                                         {
-                                            message = "Help: Commands include: !time !date !about !int2binary !help";
+                                            message = "Help: Commands include: !time !date !about !int2binary !blacklist !help";
                                         }
+                                        else if (command == "blacklist")
+                                        {
+                                            usertoadd = msg.Sender.Handle;
+                                            containsuser = File.ReadLines("blacklist.txt").Contains(usertoadd);
+                                            if (!containsuser == true)
+                                            {
+                                                blacklist.Add(msg.Sender.Handle);
+                                                message = "Added to blacklist";
+                                                TextWriter tw = new StreamWriter("blacklist.txt");
+                                                blacklist.ForEach(tw.WriteLine);
+                                                tw.Close();
+                                                Console.WriteLine("Added user to blacklist.");
+                                            }
+                                            else
+                                            {
+                                                message = "This should never be seen by user..";    
+                                            }
+                                        }
+
                                         else                  //magic dont touch. seriously.
                                         {
                                             try           //not the most elegant solution
@@ -236,7 +259,6 @@ namespace SkypeBot
                                                 else
                                                 {
                                                     message = "Unknown Command";
-
                                                 }
                                             }
                                             catch (Exception e)
