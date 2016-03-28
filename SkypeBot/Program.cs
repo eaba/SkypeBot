@@ -127,20 +127,19 @@ namespace SkypeBot
                         case 4:
                             //spam skype status
                             Console.WriteLine("You have selected \"Spam Status\"\nPress any key to stop.");
+                            int c=0;
                             while (!Console.KeyAvailable)
                             {
-                                //ghetto way
-                                skype.ChangeUserStatus(TUserStatus.cusOnline);
-                                Thread.Sleep(500);
-                                skype.ChangeUserStatus(TUserStatus.cusAway);
-                                Thread.Sleep(500);
-                                skype.ChangeUserStatus(TUserStatus.cusDoNotDisturb);
-                                Thread.Sleep(500);
-                                skype.ChangeUserStatus(TUserStatus.cusInvisible);
-                                Thread.Sleep(500);
+                                if (c == 0) skype.ChangeUserStatus(TUserStatus.cusOnline);
+                                else if (c == 1) skype.ChangeUserStatus(TUserStatus.cusAway);
+                                else if (c == 2) skype.ChangeUserStatus(TUserStatus.cusDoNotDisturb);
+                                else if (c == 3)
+                                {
+                                    skype.ChangeUserStatus(TUserStatus.cusInvisible);
+                                    c = 0;
+                                }
+                                c++;
                             }
-
-
                             break;
 
                         case 5:
