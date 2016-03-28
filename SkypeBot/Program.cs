@@ -20,9 +20,7 @@ namespace SkypeBot
             Skype skype = new Skype();
             skype.Attach(7, false);
 
-            ChatterBotFactory factory = new ChatterBotFactory();
-            ChatterBot bot1 = factory.Create(ChatterBotType.CLEVERBOT);
-            ChatterBotSession bot1session = bot1.CreateSession();
+
 
             //Chat chat = skype.ActiveChats[1];
             //chat.SendMessage("Auto reply " + i);
@@ -79,6 +77,10 @@ namespace SkypeBot
                         case 2:
                             //respond to unread messages with cleverbot's replies
                             Console.WriteLine("You have selected \"Cleverbot Replies\"\n\nPress any key to stop.");
+
+                            ChatterBotFactory factory = new ChatterBotFactory();
+                            ChatterBot bot1 = factory.Create(ChatterBotType.CLEVERBOT);
+                            ChatterBotSession bot1session = bot1.CreateSession();
 
                             while (!Console.KeyAvailable)
                             {
@@ -223,7 +225,7 @@ namespace SkypeBot
                                         }
                                         else if (command == "help")
                                         {
-                                            message = "Help: Commands include: !time !date !about !int2binary !blacklist !help";
+                                            message = "Help: Commands include: !time !date !about !int2binary !binary2int !blacklist !help";
                                         }
                                         else if (command == "blacklist")
                                         {
@@ -247,12 +249,18 @@ namespace SkypeBot
                                         {
                                             try           //not the most elegant solution
                                             {
-                                                if (command.Remove(10) == "int2binary")        
+                                                if (command.Substring(0, 10) == "int2binary")        
                                                 {
-                                                    string inttoconvert = command.Substring(10, command.Length - 10);
+                                                    string inttoconvert = command.Substring(10, command.Length - 10);                                                    
                                                     string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
 
                                                     message = inttoconvert + " in binary is: " + binary;
+                                                }
+                                                else if (command.Substring(0, 10) == "binary2int")
+                                                {
+                                                    string bits = command.Substring(11, command.Length - 11);                                                    
+                                                    int convertedbinary = Convert.ToInt32(bits, 2);
+                                                    message =  bits + " in decimal is: " + convertedbinary.ToString();
                                                 }
                                                 else
                                                 {
@@ -261,8 +269,7 @@ namespace SkypeBot
                                             }
                                             catch (Exception e)
                                             {
-                                                message = "Unknown Command";
-                                                
+                                                message = "Unknown Command";                                                
                                             }
                                             
                                         }
