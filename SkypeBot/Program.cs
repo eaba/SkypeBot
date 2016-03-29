@@ -77,7 +77,7 @@ namespace SkypeBot
                         case 2:
                             //respond to unread messages with cleverbot's replies
                             Console.WriteLine("You have selected \"Cleverbot Replies\"\n\nPress any key to stop.");
-
+				//TODO: add option to choose whcih service to use
                             ChatterBotFactory factory = new ChatterBotFactory();
                             ChatterBot bot1 = factory.Create(ChatterBotType.CLEVERBOT);
                             ChatterBotSession bot1session = bot1.CreateSession();
