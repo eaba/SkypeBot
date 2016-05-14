@@ -283,7 +283,7 @@ namespace SkypeBot
 
                                                     //dont really like this
                                                     skype.SendMessage(msg.Sender.Handle, premessage);
-                                                    message = "That took " + c + "iterations.";
+                                                    message = "That took " + c + " iterations.";
                                                  
                                                 }
                                                 else
