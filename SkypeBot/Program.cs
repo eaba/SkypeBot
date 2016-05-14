@@ -20,8 +20,6 @@ namespace SkypeBot
             Skype skype = new Skype();
             skype.Attach(7, false);
 
-
-
             //Chat chat = skype.ActiveChats[1];
             //chat.SendMessage("Auto reply " + i);
 
@@ -41,17 +39,17 @@ namespace SkypeBot
             //check if the blacklist file exists. If it does not, it creates it and loads its contents into a list
             try
             {
-                blacklist = File.ReadLines("blacklist.txt").ToList();
+                blacklist = File.ReadLines("true.dat").ToList();
             }
             catch
             {
                 Console.WriteLine("Blacklist failed to load!\nCreating new one");
-                using (StreamWriter sw = File.CreateText("blacklist.txt"))
+                using (StreamWriter sw = File.CreateText("true.dat"))
                     sw.Close();
             }
             finally
             {
-                blacklist = File.ReadLines("blacklist.txt").ToList();
+                blacklist = File.ReadLines("true.dat").ToList();
                 Console.WriteLine("Blacklist loaded");
                 Thread.Sleep(1000);
             }
@@ -73,7 +71,7 @@ namespace SkypeBot
                             string messagetosend = Console.ReadLine();
                             skype.SendMessage(contacttosend, messagetosend);
                             break;
-
+                            
                         case 2:
                             //respond to unread messages with cleverbot's replies
                             Console.WriteLine("You have selected \"Cleverbot Replies\"\n\nPress any key to stop.");
@@ -138,7 +136,7 @@ namespace SkypeBot
                                     skype.ChangeUserStatus(TUserStatus.cusInvisible);
                                     c = 0;
                                 }
-                                c++;
+                                c++;    //hehehehehe
                             }
                             break;
 
@@ -220,11 +218,11 @@ namespace SkypeBot
                                         }
                                         else if (command == "about")
                                         {
-                                            message = "made by root 2016 and such and such. Licensed under the DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE";
+                                            message = "made by root 2016 and such and such. Licensed under the 'DO WHAT THE FUCK YOU WANT TO' public license. https://rootme.tk";
                                         }
                                         else if (command == "help")
                                         {
-                                            message = "Help: Commands include: !time !date !about !int2binary !binary2int !blacklist !help";
+                                            message = "Help: Commands include: !time !date !about !int2binary !binary2int !blacklist !help !collatzcon";
                                         }
                                         else if (command == "blacklist")
                                         {
@@ -233,7 +231,7 @@ namespace SkypeBot
                                             if (!containsuser == true)
                                             {
                                                 blacklist.Add(msg.Sender.Handle);
-                                                message = "Added to blacklist";
+                                                message = "Added to blacklist.";
                                                 TextWriter tw = new StreamWriter("blacklist.txt");
                                                 blacklist.ForEach(tw.WriteLine);
                                                 tw.Close();
@@ -248,25 +246,52 @@ namespace SkypeBot
                                         {
                                             try           //not the most elegant solution
                                             {
-                                                if (command.Substring(0, 10) == "int2binary")        
+                                                if (command.Substring(0, 10) == "int2binary")     //this usually breaks so dont scare it   
                                                 {
                                                     string inttoconvert = command.Substring(10, command.Length - 10);                                                    
                                                     string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
 
                                                     message = inttoconvert + " in binary is: " + binary;
                                                 }
-                                                else if (command.Substring(0, 10) == "binary2int")
+                                                else if (command.Substring(0, 10) == "binary2int") //dont scare this guy too
                                                 {
                                                     string bits = command.Substring(11, command.Length - 11);                                                    
                                                     int convertedbinary = Convert.ToInt32(bits, 2);
                                                     message =  bits + " in decimal is: " + convertedbinary.ToString();
+                                                }
+                                                else if (command.Substring(0,10) == "collatzcon") 
+                                                {
+                                                    int number = int.Parse(command.Substring(11, command.Length - 11));
+                                                    c = 0;
+                                                    string premessage = number.ToString();
+                                                    do {
+                                                    
+                                                        if (number % 2 == 0) //even
+                                                        {
+                                                            number = number / 2;
+                                                            //Console.WriteLine("even");
+                                                        }
+                                                        else //odd
+                                                        {
+                                                            number = number * 3 + 1;
+                                                            //Console.WriteLine("odd");
+                                                        }
+                                                        c++; //hehehe i gotta stop
+                                                        premessage += "," + number;
+                                                        
+                                                    } while (number != 1);
+
+                                                    //dont really like this
+                                                    skype.SendMessage(msg.Sender.Handle, premessage);
+                                                    message = "That took " + c + "iterations.";
+                                                 
                                                 }
                                                 else
                                                 {
                                                     message = "Unknown Command";
                                                 }
                                             }
-                                            catch (Exception e)
+                                            catch (Exception)
                                             {
                                                 message = "Unknown Command";                                                
                                             }
@@ -292,6 +317,5 @@ namespace SkypeBot
                 }
             }
         }
-
     }
 }
