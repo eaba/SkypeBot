@@ -34,21 +34,21 @@ namespace SkypeBot
             //check if the blacklist file exists. If it does not, it creates it and loads its contents into a list
             try
             {
-                blacklist = File.ReadLines("true.dat").ToList();
+                blacklist = File.ReadLines("blacklist.txt").ToList();
             }
             catch
             {
                 Console.WriteLine("Blacklist failed to load!\nCreating new one");
-                using (StreamWriter sw = File.CreateText("true.dat"))
+                using (StreamWriter sw = File.CreateText("blacklist.txt"))
                     sw.Close();
             }
             finally
             {
-                blacklist = File.ReadLines("true.dat").ToList();
+                blacklist = File.ReadLines("blacklist.txt").ToList();
                 Console.WriteLine("Blacklist loaded");
                 Thread.Sleep(1000);
             }
-
+            #region s
             while (1 < 2)
             {
                 Console.Clear();
@@ -58,6 +58,7 @@ namespace SkypeBot
                 {
                     switch (choice)
                     {
+                        
                         case 1:
                             //send message
                             Console.WriteLine("You have selected \"Send Message\"\nPlease enter a contact: ");
@@ -211,11 +212,21 @@ namespace SkypeBot
                                         }
                                         else if (command == "about")
                                         {
-                                            message = "made by root 2016 and such and such. Licensed under the 'DO WHAT THE FUCK YOU WANT TO' public license. https://rootme.tk";
+                                            message = "made by yars 2016 and such and such. https://rootme.tk";
                                         }
                                         else if (command == "help")
                                         {
-                                            message = "Help: Commands include: !time !date !about !int2binary !binary2int !blacklist !help !collatzcon";
+                                            message = "Commands include:\n!help - Shows this message\n!time - shows current time (local to this program)\n!date - Shows current date\n!about - Shows about info\n!int2binary - Convert integers to binary\n!binary2int - Convert binary to integers\n!blacklist - Add yourself to blacklist\n!collatzcon - Preform Collatz Conjecture thing\n!stallman";
+                                        }
+                                        #endregion
+                                        else if (command == "stallman")
+                                        {
+                                            //get a list of rms qoutes and tell them to the user
+                                            message = "not yet implemented";
+                                            List<String> stallman = File.ReadAllLines("stallman.txt").ToList();
+                                            Random r = new Random();
+                                            int i = r.Next(stallman.Count);
+                                            message = stallman[i];
                                         }
                                         else if (command == "blacklist")
                                         {
@@ -255,11 +266,10 @@ namespace SkypeBot
                                                 else if (command.Substring(0,10) == "collatzcon") //Collatz conjecture
                                                 {
                                                     int number = int.Parse(command.Substring(11, command.Length - 11));
-                                                    c = 0;
+                                                    c = 1;
                                                     string premessage = number.ToString();
 
-
-                                                    if (number >= 0)
+                                                    if (number > 0)
                                                     {
                                                         do
                                                         {
@@ -272,17 +282,16 @@ namespace SkypeBot
                                                                 number = number * 3 + 1;
                                                             }
                                                             c++; //hehehe i gotta stop
-                                                            premessage += "," + number;
+                                                            premessage += ", " + number;
 
                                                         } while (number != 1);
 
-                                                        //dont really like this
-                                                        skype.SendMessage(msg.Sender.Handle, premessage);
-                                                        message = "That took " + c + " iterations.";
+                                                        message = premessage + "\nThat took " + c + " iterations." ;
+
                                                     }
                                                     else
                                                     {
-                                                        message = "Invalid input. Input must be a positive integer.";
+                                                        message = "Input must be a positive integer.";
                                                     }                                                 
                                                 }
                                                 else
@@ -293,16 +302,12 @@ namespace SkypeBot
                                             catch (Exception)
                                             {
                                                 message = "Unknown Command";                                                
-                                            }
-                                            
+                                            }                                                                                       
                                         }
-
 
                                         Console.WriteLine(msg.Sender.Handle + " >> " + command);
                                         skype.SendMessage(msg.Sender.Handle, message);
 
-
-                                        //add: binary/hex/decimal converter
                                     }
                                 }
                             }
