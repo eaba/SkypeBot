@@ -221,8 +221,7 @@ namespace SkypeBot
                                         #endregion
                                         else if (command == "stallman")
                                         {
-                                            //get a list of rms qoutes and tell them to the user
-                                            message = "not yet implemented";
+                                            //get a list of rms qoutes and tell them to the user                                           
                                             List<String> stallman = File.ReadAllLines("stallman.txt").ToList();
                                             Random r = new Random();
                                             int i = r.Next(stallman.Count);
