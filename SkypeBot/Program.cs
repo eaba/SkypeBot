@@ -193,12 +193,12 @@ namespace SkypeBot
                             while (!Console.KeyAvailable)
                             {
                                 foreach (IChatMessage msg in skype.MissedMessages)
-                                {
-                                    msg.Seen = true;
+                                {                                  
                                     string trigger = "!";
 
                                     if (!blacklist.Contains(msg.Sender.Handle) && msg.Body.IndexOf(trigger) == 0)
                                     {
+                                        msg.Seen = true;
                                         string command = msg.Body.Remove(0, trigger.Length).ToLower();
                                         string message;
 
@@ -216,7 +216,7 @@ namespace SkypeBot
                                         }
                                         else if (command == "help")
                                         {
-                                            message = "Commands include:\n!help - Shows this message\n!time - shows current time (local to this program)\n!date - Shows current date\n!about - Shows about info\n!int2binary - Convert integers to binary\n!binary2int - Convert binary to integers\n!blacklist - Add yourself to blacklist\n!collatzcon - Preform Collatz Conjecture thing\n!stallman";
+                                            message = "Commands include:\n!help - Shows this message\n!time - shows current time (local to this program)\n!date - Shows current date\n!about - Shows about info\n!int2binary - Convert integers to binary\n!binary2int - Convert binary to integers\n!blacklist - Add yourself to blacklist\n!collatzcon - THE SYNTAX IS !collatzcon number\n!stallman";
                                         }
                                         #endregion
                                         else if (command == "stallman")
