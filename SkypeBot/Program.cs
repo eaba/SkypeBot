@@ -20,13 +20,8 @@ namespace SkypeBot
             Skype skype = new Skype();
             skype.Attach(7, false);
 
-            //Chat chat = skype.ActiveChats[1];
-            //chat.SendMessage("Auto reply " + i);
-
             List<string> allcontacts = new List<string>();
             List<string> blacklist;
-
-            List<string> activesessions = new List<string>();
 
             bool containsuser;
 
@@ -75,7 +70,7 @@ namespace SkypeBot
                         case 2:
                             //respond to unread messages with cleverbot's replies
                             Console.WriteLine("You have selected \"Cleverbot Replies\"\n\nPress any key to stop.");
-				//TODO: add option to choose whcih service to use
+				            //TODO: add option to choose whcih service to use
                             ChatterBotFactory factory = new ChatterBotFactory();
                             ChatterBot bot1 = factory.Create(ChatterBotType.CLEVERBOT);
                             ChatterBotSession bot1session = bot1.CreateSession();
@@ -84,10 +79,6 @@ namespace SkypeBot
                             {
                                 foreach (IChatMessage msg in skype.MissedMessages)
                                 {
-                                    //string handle = msg.Sender.Handle;
-                                    //string message = "test";
-                                    //skype.SendMessage(handle, message);
-
                                     if (!blacklist.Contains(msg.Sender.Handle))
                                     {
                                         try
@@ -102,7 +93,7 @@ namespace SkypeBot
                                         catch (Exception e)
                                         {
                                             //usually a timeout
-                                            Console.WriteLine("Timed out..\n" + e);
+                                            Console.WriteLine("Timed out..\n\n" + e);
                                         }
                                     }
                                     else
@@ -196,6 +187,8 @@ namespace SkypeBot
 
                         case 9:
                             //commands
+                            Console.Clear();
+                            Console.WriteLine("Waiting for commands.");
                             while (!Console.KeyAvailable)
                             {
                                 foreach (IChatMessage msg in skype.MissedMessages)
@@ -259,32 +252,38 @@ namespace SkypeBot
                                                     int convertedbinary = Convert.ToInt32(bits, 2);
                                                     message =  bits + " in decimal is: " + convertedbinary.ToString();
                                                 }
-                                                else if (command.Substring(0,10) == "collatzcon") 
+                                                else if (command.Substring(0,10) == "collatzcon") //Collatz conjecture
                                                 {
                                                     int number = int.Parse(command.Substring(11, command.Length - 11));
                                                     c = 0;
                                                     string premessage = number.ToString();
-                                                    do {
-                                                    
-                                                        if (number % 2 == 0) //even
-                                                        {
-                                                            number = number / 2;
-                                                            //Console.WriteLine("even");
-                                                        }
-                                                        else //odd
-                                                        {
-                                                            number = number * 3 + 1;
-                                                            //Console.WriteLine("odd");
-                                                        }
-                                                        c++; //hehehe i gotta stop
-                                                        premessage += "," + number;
-                                                        
-                                                    } while (number != 1);
 
-                                                    //dont really like this
-                                                    skype.SendMessage(msg.Sender.Handle, premessage);
-                                                    message = "That took " + c + " iterations.";
-                                                 
+
+                                                    if (number >= 0)
+                                                    {
+                                                        do
+                                                        {
+                                                            if (number % 2 == 0) //even
+                                                            {
+                                                                number = number / 2;
+                                                            }
+                                                            else //odd
+                                                            {
+                                                                number = number * 3 + 1;
+                                                            }
+                                                            c++; //hehehe i gotta stop
+                                                            premessage += "," + number;
+
+                                                        } while (number != 1);
+
+                                                        //dont really like this
+                                                        skype.SendMessage(msg.Sender.Handle, premessage);
+                                                        message = "That took " + c + " iterations.";
+                                                    }
+                                                    else
+                                                    {
+                                                        message = "Invalid input. Input must be a positive integer.";
+                                                    }                                                 
                                                 }
                                                 else
                                                 {
