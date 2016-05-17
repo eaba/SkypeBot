@@ -64,8 +64,8 @@ namespace SkypeBot
                             Console.WriteLine("You have selected \"Send Message\"\nPlease enter a contact: ");
                             string contacttosend = Console.ReadLine();
                             Console.WriteLine("Please enter message: ");
-                            string messagetosend = Console.ReadLine();
-                            skype.SendMessage(contacttosend, messagetosend);
+                            string messagetosend = Console.ReadLine();                            
+                            SendMessage(contacttosend, messagetosend);
                             break;
                             
                         case 2:
@@ -88,8 +88,8 @@ namespace SkypeBot
                                             msg.Seen = true;
                                             Console.WriteLine("Message: [" + msg.Body + "]\n");
                                             string reply = "bot> " + bot1session.Think(msg.Body);
-                                            Console.WriteLine("Reply: [" + reply + "]\n");
-                                            skype.SendMessage(msg.Sender.Handle, reply);
+                                            Console.WriteLine("Reply: [" + reply + "]\n");                                            
+                                            SendMessage(msg.Sender.Handle, reply);
                                         }
                                         catch (Exception e)
                                         {
@@ -304,9 +304,8 @@ namespace SkypeBot
                                             }                                                                                       
                                         }
 
-                                        Console.WriteLine(msg.Sender.Handle + " >> " + command);
-                                        skype.SendMessage(msg.Sender.Handle, message);
-
+                                        Console.WriteLine(msg.Sender.Handle + " >> " + command);                                       
+                                        SendMessage(msg.Sender.Handle, message);
                                     }
                                 }
                             }
@@ -319,6 +318,13 @@ namespace SkypeBot
                     Console.ReadKey();
                 }
             }
+        }
+
+        static void SendMessage(string sender, string message)
+        {
+            //trying something out
+            Skype skype = new Skype();
+            skype.SendMessage(sender, message);
         }
     }
 }
