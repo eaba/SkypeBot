@@ -123,7 +123,7 @@ namespace SkypeBot
                                 if (c == 0) skype.ChangeUserStatus(TUserStatus.cusOnline);
                                 else if (c == 1) skype.ChangeUserStatus(TUserStatus.cusAway);
                                 else if (c == 2) skype.ChangeUserStatus(TUserStatus.cusDoNotDisturb);
-                                else if (c == 3) skype.ChangeUserStatus(TUserStatus.cusInvisible); c = 0;
+                                else if (c == 3) { skype.ChangeUserStatus(TUserStatus.cusInvisible); c = -1; }
 
                                 c++;    //hehehehehe
                             }
