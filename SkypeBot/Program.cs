@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Net;
+using System.Text.RegularExpressions;
 using SKYPE4COMLib;
 using ChatterBotAPI;
 
@@ -16,7 +18,7 @@ namespace SkypeBot
         {
             Console.WriteLine("Started!!");
             Console.Title = "Skype Toolkit";
-
+            
             Skype skype = new Skype();
             skype.Attach(7, false);
 
@@ -57,8 +59,7 @@ namespace SkypeBot
                 if (int.TryParse(Console.ReadLine(), out choice))
                 {
                     switch (choice)
-                    {
-                        
+                    {                        
                         case 1:
                             //send message
                             Console.WriteLine("You have selected \"Send Message\"\nPlease enter a contact: ");
@@ -104,7 +105,6 @@ namespace SkypeBot
                                     }
                                 }
                             }
-
                             break;
 
                         case 3:
@@ -123,11 +123,8 @@ namespace SkypeBot
                                 if (c == 0) skype.ChangeUserStatus(TUserStatus.cusOnline);
                                 else if (c == 1) skype.ChangeUserStatus(TUserStatus.cusAway);
                                 else if (c == 2) skype.ChangeUserStatus(TUserStatus.cusDoNotDisturb);
-                                else if (c == 3)
-                                {
-                                    skype.ChangeUserStatus(TUserStatus.cusInvisible);
-                                    c = 0;
-                                }
+                                else if (c == 3) skype.ChangeUserStatus(TUserStatus.cusInvisible); c = 0;
+
                                 c++;    //hehehehehe
                             }
                             break;
@@ -181,8 +178,11 @@ namespace SkypeBot
 
                         case 8:
                             //display all contacts to user
+
+
+                            int n = 1;
                             Console.WriteLine("\n");
-                            allcontacts.ForEach(i => Console.WriteLine("{0}", i));
+                            allcontacts.ForEach(i => Console.WriteLine("{0} {1}", n++, i));
                             Console.WriteLine("\n");
                             break;
 
@@ -216,7 +216,7 @@ namespace SkypeBot
                                         }
                                         else if (command == "help")
                                         {
-                                            message = "Commands include:\n!help - Shows this message\n!time - shows current time (local to this program)\n!date - Shows current date\n!about - Shows about info\n!int2binary - Convert integers to binary\n!binary2int - Convert binary to integers\n!blacklist - Add yourself to blacklist\n!collatzcon - THE SYNTAX IS !collatzcon number\n!stallman";
+                                            message = "Commands include:\n!help - Shows this message\n!time - shows current time (local to this program)\n!date - Shows current date\n!about - Shows about info\n!int2binary - Convert integers to binary\n!binary2int - Convert binary to integers\n!catfacts\n!blacklist - Add yourself to blacklist\n!collatzcon - THE SYNTAX IS !collatzcon number\n!stallman";
                                         }
                                         #endregion
                                         else if (command == "stallman")
@@ -242,8 +242,14 @@ namespace SkypeBot
                                             }
                                             else
                                             {
-                                                message = "This should never be seen by user..";    
+                                                message = "This should never be seen by user..";
                                             }
+                                        }
+                                        else if (command == "catfact")
+                                        {
+                                            CatFacts(msg.Sender.Handle);
+                                            message = " ";
+
                                         }
                                         else                  //magic dont touch. seriously.
                                         {
@@ -251,18 +257,18 @@ namespace SkypeBot
                                             {
                                                 if (command.Substring(0, 10) == "int2binary")     //this usually breaks so dont scare it   
                                                 {
-                                                    string inttoconvert = command.Substring(10, command.Length - 10);                                                    
+                                                    string inttoconvert = command.Substring(10, command.Length - 10);
                                                     string binary = Convert.ToString(Convert.ToInt32(inttoconvert), 2);
 
                                                     message = inttoconvert + " in binary is: " + binary;
                                                 }
                                                 else if (command.Substring(0, 10) == "binary2int") //dont scare this guy too
                                                 {
-                                                    string bits = command.Substring(11, command.Length - 11);                                                    
+                                                    string bits = command.Substring(11, command.Length - 11);
                                                     int convertedbinary = Convert.ToInt32(bits, 2);
-                                                    message =  bits + " in decimal is: " + convertedbinary.ToString();
+                                                    message = bits + " in decimal is: " + convertedbinary.ToString();
                                                 }
-                                                else if (command.Substring(0,10) == "collatzcon") //Collatz conjecture
+                                                else if (command.Substring(0, 10) == "collatzcon") //Collatz conjecture
                                                 {
                                                     int number = int.Parse(command.Substring(11, command.Length - 11));
                                                     c = 1;
@@ -285,13 +291,13 @@ namespace SkypeBot
 
                                                         } while (number != 1);
 
-                                                        message = premessage + "\nThat took " + c + " iterations." ;
+                                                        message = premessage + "\nThat took " + c + " iterations.";
 
                                                     }
                                                     else
                                                     {
                                                         message = "Input must be a positive integer.";
-                                                    }                                                 
+                                                    }
                                                 }
                                                 else
                                                 {
@@ -300,8 +306,8 @@ namespace SkypeBot
                                             }
                                             catch (Exception)
                                             {
-                                                message = "Unknown Command";                                                
-                                            }                                                                                       
+                                                message = "Unknown Command";
+                                            }
                                         }
 
                                         Console.WriteLine(msg.Sender.Handle + " >> " + command);                                       
@@ -322,9 +328,23 @@ namespace SkypeBot
 
         static void SendMessage(string sender, string message)
         {
-            //trying something out
-            Skype skype = new Skype();
-            skype.SendMessage(sender, message);
+            if (!Regex.IsMatch(message, @"^\s*$"))
+            {
+                Skype skype = new Skype();
+                Thread.Sleep(1000);
+                skype.SendMessage(sender, message);
+            }
+        }
+
+        static void CatFacts(string sender)
+        {
+            var json = new WebClient().DownloadString("https://catfacts-api.appspot.com/api/facts");
+
+            var parsed = json.Split('[', ']')[1];
+            parsed = parsed.Replace("\"", "");
+
+            SendMessage(sender, parsed);
+
         }
     }
 }
